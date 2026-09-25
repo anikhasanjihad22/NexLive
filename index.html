@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>NexLive — Live TV</title>
+<meta name="description" content="NexLive — watch free-to-air live TV channels from around the world." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230A0D13'/%3E%3Ccircle cx='50' cy='50' r='16' fill='%234C6FFF'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-mark">NexLive<span class="dot">.</span></div>
+  <div class="splash-bar"></div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">NexLive<span class="dot">.</span></div>
+  <div class="search-wrap">
+    <input id="searchInput" type="search" placeholder="Search channels, countries, categories..." aria-label="Search channels" />
+  </div>
+</header>
+
+<main id="mainView">
+
+  <!-- SEARCH RESULTS (shown only while searching) -->
+  <section id="searchResults" class="section" style="display:none;">
+    <div class="section-head"><h2 class="section-title">Search results</h2></div>
+    <div id="searchGrid" class="row-scroll" style="flex-wrap:wrap; overflow:visible;"></div>
+  </section>
+
+  <div id="browseView">
+    <!-- HERO SLIDER -->
+    <div id="heroSlider" class="hero-slider" aria-roledescription="carousel" aria-label="Featured live channels">
+      <div class="hero-dots" id="heroDots"></div>
+      <button class="hero-nav prev" id="heroPrev" aria-label="Previous featured channel">&#8249;</button>
+      <button class="hero-nav next" id="heroNext" aria-label="Next featured channel">&#8250;</button>
+      <!-- slides injected by app.js -->
+    </div>
+
+    <!-- COUNTRY / CATEGORY FILTER CHIPS -->
+    <div id="filterChips" class="chip-row" role="tablist" aria-label="Filter by country or category"></div>
+
+    <!-- HOMEPAGE SECTIONS (Bangladesh / India / Sports / ... injected by app.js) -->
+    <div id="sectionsContainer"></div>
+  </div>
+</main>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav" aria-label="Primary">
+  <button class="nav-btn active" data-nav="home" aria-label="Home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    Home
+  </button>
+  <button class="nav-btn" data-nav="live" aria-label="Live now">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M8 3l4 4 4-4"/></svg>
+    Live
+  </button>
+  <button class="nav-btn" data-nav="categories" aria-label="Categories">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Categories
+  </button>
+  <button class="nav-btn" data-nav="search" aria-label="Search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    Search
+  </button>
+</nav>
+
+<!-- PLAYER MODAL -->
+<div class="player-modal" id="playerModal" role="dialog" aria-modal="true" aria-label="Live TV player">
+  <div class="player-stage" id="playerStage">
+    <video id="videoEl" playsinline></video>
+
+    <div class="player-watermark"><span>NexLive</span><span class="dot">.</span></div>
+
+    <div class="player-center-status" id="playerStatus">
+      <div class="spinner" id="playerSpinner"></div>
+      <p id="playerStatusText">Loading channel…</p>
+    </div>
+
+    <div class="player-overlay visible" id="playerOverlay">
+      <div class="player-top">
+        <img id="playerLogo" src="" alt="" />
+        <div class="titles">
+          <div class="name" id="playerChannelName">Channel name</div>
+          <div class="meta">
+            <span class="badge badge-live" id="playerLiveBadge">LIVE</span>
+            <span id="playerChannelCountry"></span>
+          </div>
+        </div>
+        <button class="icon-btn" id="closePlayerBtn" aria-label="Close player">&#10005;</button>
+      </div>
+
+      <div class="player-bottom">
+        <div class="player-controls">
+          <button class="icon-btn" id="playPauseBtn" aria-label="Play or pause">&#10074;&#10074;</button>
+          <button class="icon-btn" id="prevChBtn" aria-label="Previous channel">&#8249;</button>
+          <button class="icon-btn" id="nextChBtn" aria-label="Next channel">&#8250;</button>
+          <div class="vol-row">
+            <button class="icon-btn" id="muteBtn" aria-label="Mute or unmute">&#128264;</button>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1" aria-label="Volume" />
+          </div>
+          <div class="spacer"></div>
+          <button class="icon-btn" id="pipBtn" aria-label="Picture in picture">&#9633;</button>
+          <button class="icon-btn" id="fullscreenBtn" aria-label="Fullscreen">&#9974;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-strip">
+    <div class="section-title">More like this</div>
+    <div id="relatedGrid" class="row-scroll"></div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<template id="cardTemplate">
+  <button class="card" tabindex="0">
+    <div class="card-logo-wrap"><img loading="lazy" alt="" /></div>
+    <div class="card-name"></div>
+    <div class="card-meta">
+      <span class="flag"></span>
+      <span class="country-name"></span>
+      <span class="badge badge-live">LIVE</span>
+    </div>
+  </button>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
